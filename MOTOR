@@ -1,0 +1,58 @@
+# 2.54 mm/rev, 200 steps/rev, 1024 microsteps/step
+#
+file "$(MOTOR)/db/basic_asyn_motor_clf.db"
+{
+pattern
+{N,         M,        DTYP, PORT, ADDR,        DESC,  EGU,   TWV,  DIR, VELO,   VMAX,  VBAS, ACCL, BDST, BVEL, BACC, HLSV, HVEL,    JVEL,  JVAR,  SREV,      MRES,   ERES, PREC, RBDB,   DHLM,   DLLM, URIP, UEIP, LOOP, STAGE_TYPE, HIHI, LOLO}
+{1, "MS-$(N)", "asynMotor", ACS1,    0,  "axis$(N)", "mm",   0.1,  Pos,   .5,   0.75,    .1,  7.5,    0,    0,    0,    2,  .01,    1000,  1000,    24,    0.0001, 0.0001,    2,        25,      0,    0,    0,    1, "Lin OL", 25, 0} #Thor ZFS25B
+}
+ 
+file "$(MOTOR)/db/profileMoveController.template"
+{
+pattern
+{R,     PORT, NAXES,  NPOINTS, NPULSES, TIMEOUT}
+{pm1:,  ACS1,     8,     2000,    2000,     2.0}
+}
+ 
+file "$(MOTOR)/db/profileMoveAxis.template"
+{
+pattern
+{R,     M, NPOINTS, NREADBACK, PORT, ADDR, TIMEOUT, PREC}
+{pm1:,  1,    2000,      2000, ACS1,    0,     2.0,    2}
+}
+ 
+file "$(MOTOR)/db/SPiiPlusAxisExtra.db"
+{
+pattern
+{M,   PORT,   ADDR}
+{MS-1,  ACS1,    0}
+}
+ 
+file "$(MOTOR)/modules/motorAcsMotion/acsMotionApp/Db/SPiiPlusHoming.db"
+{
+pattern
+{M,    PORT,   ADDR, TIMEOUT,  VAL,  MAX_DIST,  OFFSET_POS, OFFSET_NEG, CURR_LIMIT}
+{MS-1,   ACS1,    0,     2.0,    2,       360,           0,       -3.0, 0.0}
+}
+ 
+file "$(MOTOR)/db/SPiiPlusJogging.db"
+{
+pattern
+{M,   PORT, ADDR, TIMEOUT,   VAL}
+{MS-1,  ACS1,    0, 2.0,       0}
+}
+ 
+# These records work, but the initial values are all zero.  Maybe HOPR/LOPR/DRVH/DRVL need to be set?
+file "$(MOTOR)/db/SPiiPlusMaxParams.db"
+{
+pattern
+{M,   PORT,   ADDR,  MAX_VELO,  MAX_ACCL,   PREC}
+{MS-1,  ACS1,    0,      20.0,       2.5,      2}
+}
+ 
+file "$(MOTOR)/db/SPiiPlusMaxParamsRbv.db"
+{
+pattern
+{M,     PORT, ADDR, PREC}
+{MS-1,  ACS1,    0,    2}
+}
